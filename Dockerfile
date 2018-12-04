@@ -36,7 +36,7 @@ RUN set -x; \
     addgroup -S -g 82 www-data && addgroup -S -g 101 nginx; \
     addgroup app www-data && addgroup app nginx;
 
-COPY docker-php-source docker-php-ext-* docker-php-entrypoint /usr/local/bin/
+COPY --chown=app:www-data files/docker-php-source files/docker-php-ext-* files/docker-php-entrypoint /usr/local/bin/
 
 # persistent deps
 # https://github.com/docker-library/php/issues/494
@@ -92,9 +92,9 @@ RUN set -ex;
         php7-pdo_mysql \
         php7-pdo_sqlite \
         sqlite-dev; \
-    export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS";\
-    docker-php-source extract;\
-    gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)";\
+    export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS"; \
+    docker-php-source extract; \
+    gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)"; \
     cd /usr/src/php; \
     ./configure \
         --build="${gnuArch}" \
